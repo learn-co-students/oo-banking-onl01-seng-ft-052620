@@ -22,8 +22,8 @@ attr_reader :sender, :receiver, :amount
 
   def execute_transaction
     if valid? && status == "pending"
-    sender.balance -= amount
-    receiver.balance += amount
+    sender.transfer(amount)
+    receiver.deposit(amount)
     self.status = "complete"
     elsif status == "complete"
       "Current transaction is rejected. The transaction was completed. Please check your account balance."
@@ -35,11 +35,11 @@ attr_reader :sender, :receiver, :amount
   
   def reverse_transfer
     if status == "complete"
-      receiver.balance -= amount
-      sender.balance += amount
+      receiver.transfer(amount)
+      sender.deposit(amount)
       self.status = "reversed"
     else
-      "The transaction was rejected."
+      "Transaction rejected."
     end
   end
 
